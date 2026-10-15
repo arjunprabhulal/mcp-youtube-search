@@ -1,0 +1,24 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.arjunprabhulal/mcp-youtube-search",
+  "title": "YouTube Search",
+  "description": "Search YouTube videos through SerpApi: titles, links, channels, views, dates and durations.",
+  "repository": {
+    "url": "https://github.com/arjunprabhulal/mcp-youtube-search",
+    "source": "github"
+  },
+  "version": "0.2.0",
+  "packages": [
+    {
+      "registryType": "pypi",
+      "identifier": "mcp-youtube-search",
+      "version": "0.2.0",
+      "runtimeHint": "uvx",
+      "transport": { "type": "stdio" },
+      "packageArguments": [{ "type": "positional", "value": "server" }],
+      "environmentVariables": [
+        { "name": "SERP_API_KEY", "description": "Your SerpApi key (serpapi.com)", "isRequired": true, "isSecret": true }
+      ]
+    }
+  ]
+}

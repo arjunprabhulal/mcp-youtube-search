@@ -1,87 +1,58 @@
 # MCP YouTube Search
 
-A Python package for searching YouTube videos via SerpAPI, with an MCP server implementation.
+<!-- mcp-name: io.github.arjunprabhulal/mcp-youtube-search -->
 
-## Installation
+An MCP server that searches YouTube through [SerpApi](https://serpapi.com/youtube-search-api), for Claude, Cursor and other MCP clients: titles, links, channels, views, publish dates, durations and descriptions.
 
-Install from PyPI:
-
-```bash
-pip install mcp-youtube-search
-```
+[![CI](https://github.com/arjunprabhulal/mcp-youtube-search/actions/workflows/ci.yml/badge.svg)](https://github.com/arjunprabhulal/mcp-youtube-search/actions/workflows/ci.yml)
+[![PyPI](https://img.shields.io/pypi/v/mcp-youtube-search)](https://pypi.org/project/mcp-youtube-search/)
 
 ## Requirements
 
-- Python 3.11+
-- SerpAPI API key (get one at [serpapi.com](https://serpapi.com/))
+- Python 3.10 or later (or [uv](https://docs.astral.sh/uv/))
+- A SerpApi key in `SERP_API_KEY` (serpapi.com has a free tier)
 
-## Usage
+## Use it from an MCP client
 
-### Set your API key
-
-You can set your SerpAPI API key in one of two ways:
-
-1. Set it as an environment variable:
-   ```bash
-   export SERP_API_KEY="your_api_key_here"
-   ```
-
-2. Or create a `.env` file with the following content:
-   ```
-   SERP_API_KEY=your_api_key_here
-   ```
-
-### As a Python library
-
-```python
-from mcp_youtube_search.search import YouTubeSearch
-
-# Initialize with API key
-search = YouTubeSearch(api_key="your_api_key_here")  # or omit to use env var
-
-# Search for videos
-results = search.search("python tutorial", max_results=5)
-
-# Process results
-for video in results["results"]:
-    print(f"Title: {video['title']}")
-    print(f"Link: {video['link']}")
-    print(f"Channel: {video['channel']}")
-    print(f"Views: {video['views']}")
-    print(f"Duration: {video['duration']}")
-    print(f"Published: {video['published_date']}")
-    print("---")
+```json
+{
+  "mcpServers": {
+    "youtube-search": {
+      "command": "uvx",
+      "args": ["mcp-youtube-search", "server"],
+      "env": { "SERP_API_KEY": "your-serpapi-key" }
+    }
+  }
+}
 ```
 
-### As a command-line tool
+Or `pip install mcp-youtube-search` and use `"command": "mcp-youtube-search", "args": ["server"]`.
 
-Search for videos:
+## Command line
 
 ```bash
-mcp-youtube-search search "python tutorial" --max-results 5
+export SERP_API_KEY="your-serpapi-key"
+mcp-youtube-search search "model context protocol" --max-results 5
+mcp-youtube-search server                                      # MCP over stdio
+mcp-youtube-search server --connection_type http --port 3002   # Streamable HTTP at http://127.0.0.1:3002/mcp
 ```
 
-Run as an MCP server:
+`LOG_LEVEL=DEBUG` shows more detail on stderr. The API key is never logged.
+
+## Tool
+
+| Tool | What it does |
+| --- | --- |
+| `search_youtube` | Videos for a query. `query`; optional `max_results` (1-50, default 10), `language` (default `en`), `country` (default `us`). Returns structured results: title, link, channel, views, publish date, duration, thumbnail, description. |
+
+## Development
 
 ```bash
-mcp-youtube-search server
-```
-
-### MCP Server Integration
-
-The package can be used as an MCP server for integration with AI assistants:
-
-```python
-from mcp_youtube_search.mcp_server import run_server
-
-# Run the server with an optional API key (or use env var)
-run_server(api_key="your_api_key_here")
+uv sync
+uv run pytest
+uv run ruff check .
 ```
 
 ## License
 
 MIT
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request. 
